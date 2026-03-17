@@ -1,4 +1,4 @@
-## Stream Object
+ ## Stream Object
 
 Used as a response for [`defineStreamHandler`](../requests/defineStreamHandler.md)
 
