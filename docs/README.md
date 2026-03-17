@@ -33,7 +33,7 @@ builder.defineStreamHandler(function(args) {
         return Promise.resolve({ streams: [stream] })
     } else {
         // otherwise return no streams
-	return Promise.resolve({ streams: [] })
+    return Promise.resolve({ streams: [] })
     }
 })
 
@@ -51,7 +51,7 @@ npm install stremio-addon-sdk
 node ./addon.js
 ```
 
-It will output a URL that you can use to [install the addon in Stremio](./docs/testing.md#how-to-install-add-on-in-stremio)
+It will output a URL that you can use to [install the addon in Stremio](./testing.md#how-to-install-addon-in-stremio)
 
 ## Documentation
 
@@ -66,7 +66,6 @@ Imports everything the SDK provides:
 * `getRouter`, converts an `addonInterface` to an express router
 * `publishToCentral`: publishes an addon URL to the public addon catalog
 
-
 #### `const builder = new addonBuilder(manifest)`
 
 Creates an addon builder object with a given manifest. This will throw if the manifest is not valid.
@@ -75,13 +74,11 @@ The manifest will determine the basic information of your addon (name, descripti
 
 [Manifest Object Definition](./api/responses/manifest.md)
 
-
 #### `builder.defineCatalogHandler(function handler(args) { })`
 
 Handles catalog requests, including search.
 
 [Catalog Request Parameters and Example](./api/requests/defineCatalogHandler.md)
-
 
 #### `builder.defineMetaHandler(function handler(args) { })`
 
@@ -89,20 +86,17 @@ Handles metadata requests. (title, releaseInfo, poster, background, etc.)
 
 [Meta Request Parameters and Example](./api/requests/defineMetaHandler.md)
 
-
 #### `builder.defineStreamHandler(function handler(args) { })`
 
 Handles stream requests.
 
 [Stream Request Parameters and Example](./api/requests/defineStreamHandler.md)
 
-
 #### `builder.defineSubtitlesHandler(function handler(args) { })`
 
 Handles subtitle requests.
 
 [Subtitle Request Parameters and Example](./api/requests/defineSubtitlesHandler.md)
-
 
 #### `builder.defineResourceHandler('addon_catalog', function handler(args) { })`
 
@@ -112,16 +106,13 @@ Handles addon catalog requests, this can be used by an addon to just send a list
 
 **The JSON format of the response to these resources is described [here](./api/responses).**
 
-
 #### `builder.getInterface()`: returns an `addonInterface`
 
 Turns the `addon` into an `addonInterface`, which is an immutable (frozen) object that has `{manifest, get}`; manifest is a regular [manifest object](./api/responses/manifest.md), while `get` is a function that takes one argument of the form `{ resource, type, id, extra }`, and returns a `Promise`
 
-
 #### `getRouter(addonInterface)`
 
 Turns the `addonInterface` into an express router, that serves the addon according to [the protocol](./protocol.md), and a landing page on the root (`/`)
-
 
 #### `publishToCentral(url)`
 
@@ -129,20 +120,18 @@ This method expects a string with the url to your `manifest.json` file.
 
 Publish your addon to the central server. After using this method your addon will be available in the Community Addons list in Stremio for users to install and use. Your addon needs to be publicly available with a URL in order for this to happen, as local addons that are not publicly available cannot be used by other Stremio users.
 
-
 #### `serveHTTP(addonInterface, options)`
 
 Starts the addon server. `options` is an object that contains:
 
 * `port`
 * `cacheMaxAge` (in seconds); `cacheMaxAge` means the `Cache-Control` header being set to `max-age=$cacheMaxAge`
-* `static`: path to a directory of static files to be served; e.g. `/public` 
+* `static`: path to a directory of static files to be served; e.g. `/public`
 
 This method is also special in that it will react to certain process arguments, such as:
 
 * `--launch`: launches Stremio in the web browser, and automatically installs/upgrades the addon
 * `--install`: installs the addon in the desktop version of Stremio
-
 
 #### `addonInterface`
 

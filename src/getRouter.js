@@ -2,6 +2,8 @@ const Router = require('router')
 const qs = require('querystring')
 const cors = require('cors')
 
+const warned = {}
+
 function getRouter({ manifest , get }) {
 	const router = new Router()
 
@@ -25,13 +27,14 @@ function getRouter({ manifest , get }) {
 		res.end(manifestRespBuf)
 	}
 
+	const hasConfigBehaviorHint = (manifest.behaviorHints || {}).configurable
 	const hasConfig = (manifest.config || []).length
 
-	if (hasConfig && !(manifest.behaviorHints || {}).configurable) {
+	if (hasConfig && !hasConfigBehaviorHint) {
 		console.warn('manifest.config is set but manifest.behaviorHints.configurable is disabled, the "Configure" button will not show in the Stremio apps')
 	}
 
-	const configPrefix = hasConfig ? '/:config?' : ''
+	const configPrefix = hasConfig || hasConfigBehaviorHint ? '/:config?' : ''
 	// having config prifix always set to '/:config?' won't resault in a problem for non configurable addons,
 	// since now the order is restricted by resources.
 
@@ -88,6 +91,12 @@ function getRouter({ manifest , get }) {
 				}
 
 				res.setHeader('Content-Type', 'application/json; charset=utf-8')
+
+				if (!warned.filename && resource === 'stream' && ((resp || {}).streams || []).length)
+					if (resp.streams.find(stream => stream && stream.url && !(stream.behaviorHints || {}).filename)) {
+						warned.filename = true
+						console.warn('streams include stream.url but do not include stream.behaviorHints.filename, this is not recommended, subtitles may not be retrieved for these streams')
+					}
 
 				res.end(JSON.stringify(resp))
 			})
